@@ -63,7 +63,7 @@ const Iris = () => {
       }
 
       const data = await response.json();
-      setCsvPath(data.file_path);
+      setCsvPath(data.absolute_file_path);
       toast.success(data.message); // Toast notification for success
     } catch (err) {
       setError(err.message);
@@ -79,6 +79,7 @@ const Iris = () => {
       return;
     }
     try {
+      console.log(csvPath);
       const response = await fetch(
         `http://127.0.0.1:8000/scatter_plot?csv_file=${encodeURIComponent(
           csvPath
