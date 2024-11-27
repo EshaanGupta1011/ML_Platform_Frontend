@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import TypedEff from "../TypedEff/TypedEff";
 import heroImg from "../../assets/photos/hero-img.png";
 import "./Hero.css";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (

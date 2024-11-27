@@ -2,10 +2,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: linear-gradient(#e4e4e4, #ffffffe8);
+  background-color: #181818;
   position: fixed;
   width: 100%;
   padding: 16px;
+  z-index: 999;
 }
 
 .navbar-logo {
@@ -14,6 +15,8 @@
   justify-content: center;
 }
 
-.navbar-logo img {
-  width: 50%;
+.navbar-logo h2 {
+  font-family: Nunito;
+  font-weight: 300;
+  font-size: 40px;
 }
