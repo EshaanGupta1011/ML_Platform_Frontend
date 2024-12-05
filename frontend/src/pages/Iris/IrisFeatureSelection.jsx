@@ -1,5 +1,10 @@
 import React, { useEffect } from "react";
-import { fetchScatterData, fetchHistogramData } from "./fetchData.js";
+import {
+  fetchScatterData,
+  fetchHistogramData,
+  fetchLinePlotData,
+  fetchCorrelationMatrixData,
+} from "../../ApiCalls/fetchData.js";
 import { toast } from "react-toastify";
 
 const IrisFeatureSelection = ({
@@ -10,6 +15,8 @@ const IrisFeatureSelection = ({
   setFeature2,
   setScatterData,
   setHistogramData,
+  setLinePlotData,
+  setCorrelationMatrixData,
   csvPath,
   setLoading,
 }) => {
@@ -29,11 +36,26 @@ const IrisFeatureSelection = ({
     setLoading(true);
     try {
       const scatterData = await fetchScatterData(csvPath, feature1, feature2);
-      console.log("Scatter Data:", scatterData); // Check what data is being returned
       if (scatterData) {
         setScatterData(scatterData);
-        const histogramData = await fetchHistogramData(csvPath);
+      }
+
+      const histogramData = await fetchHistogramData(csvPath);
+      setHistogramData(histogramData);
+      if (histogramData) {
         setHistogramData(histogramData);
+      }
+
+      const correlationMatrixData = await fetchCorrelationMatrixData(csvPath);
+      setCorrelationMatrixData(correlationMatrixData);
+      if (correlationMatrixData) {
+        setCorrelationMatrixData(correlationMatrixData);
+        console.log(correlationMatrixData);
+      }
+
+      const linePlotData = await fetchLinePlotData(csvPath);
+      if (linePlotData) {
+        setLinePlotData(linePlotData);
       }
     } catch (err) {
       console.error(`Error: ${err.message}`);
@@ -43,14 +65,14 @@ const IrisFeatureSelection = ({
   };
 
   return (
-    <div>
-      <div className="row">
+    <div className="section-feature-selection">
+      <div className="feature-selection-container">
         <div className="step-text">
           <p>
             <b>Step 2:</b> Select features from the dropdown
           </p>
         </div>
-        <div className="step-input">
+        <div className="feature-input">
           <select
             value={feature1}
             onChange={(e) => setFeature1(e.target.value)}
@@ -74,8 +96,8 @@ const IrisFeatureSelection = ({
           </select>
         </div>
       </div>
-      <div className="row">
-        <button className="iris-btn" onClick={handleFetchData}>
+      <div className="graph-btn-container">
+        <button className="graph-btn" onClick={handleFetchData}>
           Generate Graphs
         </button>
       </div>

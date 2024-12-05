@@ -1,4 +1,4 @@
-const BASE_URL = "https://140.238.255.45";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const uploadCSVFile = async (file) => {
   const formData = new FormData();
@@ -20,7 +20,6 @@ export const extractFeatures = async (csvPath) => {
   );
   if (!response.ok) throw new Error("Failed to extract features");
   const data = await response.json();
-  console.log("Extracted Data:", data); // Log the full response
   return data.feature_columns; // Extracting only 'feature_columns'
 };
 
@@ -33,8 +32,7 @@ export const fetchScatterData = async (csvPath, feature1, feature2) => {
       throw new Error("Failed to fetch scatter data");
     }
     const data = await response.json();
-    console.log("Scatter Data:", data); // Log the fetched data to debug
-    return data; // Ensure this contains the feature values for the selected columns
+    return data;
   } catch (error) {
     console.error("Error fetching scatter data:", error);
     return null;
@@ -46,5 +44,21 @@ export const fetchHistogramData = async (csvPath) => {
     `${BASE_URL}/data_science/histogram_plot?csv_file=${csvPath}`
   );
   if (!response.ok) throw new Error("Failed to fetch histogram data");
+  return await response.json();
+};
+
+export const fetchLinePlotData = async (csvPath) => {
+  const response = await fetch(
+    `${BASE_URL}/data_science/line_plot?csv_file=${csvPath}`
+  );
+  if (!response.ok) throw new Error("Failed to fetch line plot data");
+  return await response.json();
+};
+
+export const fetchCorrelationMatrixData = async (csvPath) => {
+  const response = await fetch(
+    `${BASE_URL}/data_science/correlation_matrix?csv_file=${csvPath}`
+  );
+  if (!response.ok) throw new Error("Failed to fetch correlation data");
   return await response.json();
 };

@@ -14,6 +14,8 @@ const Iris = () => {
   const [feature2, setFeature2] = useState("");
   const [scatterData, setScatterData] = useState(null);
   const [histogramData, setHistogramData] = useState(null);
+  const [linePlotData, setLinePlotData] = useState(null);
+  const [correlationMatrixData, setCorrelationMatrixData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   // Automatically set feature1 and feature2 when features are populated
@@ -39,32 +41,36 @@ const Iris = () => {
         </div>
       </div>
       <h1 className="steps-heading">It is as easy as it can get!</h1>
-      <div className="grid">
-        <IrisUpload
-          setCsvPath={setCsvPath}
-          setFeatures={setFeatures}
+
+      <IrisUpload
+        setCsvPath={setCsvPath}
+        setFeatures={setFeatures}
+        setFeature1={setFeature1}
+        setFeature2={setFeature2}
+        setLoading={setLoading}
+      />
+      {csvPath && (
+        <IrisFeatureSelection
+          features={features}
+          feature1={feature1}
           setFeature1={setFeature1}
+          feature2={feature2}
           setFeature2={setFeature2}
+          setScatterData={setScatterData}
+          setHistogramData={setHistogramData}
+          setLinePlotData={setLinePlotData}
+          setCorrelationMatrixData={setCorrelationMatrixData}
+          csvPath={csvPath}
           setLoading={setLoading}
         />
-        {csvPath && (
-          <IrisFeatureSelection
-            features={features}
-            feature1={feature1}
-            setFeature1={setFeature1}
-            feature2={feature2}
-            setFeature2={setFeature2}
-            setScatterData={setScatterData}
-            setHistogramData={setHistogramData}
-            csvPath={csvPath}
-            setLoading={setLoading}
-          />
-        )}
-      </div>
+      )}
+
       {loading && <p>Loading...</p>}
       <IrisGraphs
         scatterData={scatterData}
         histogramData={histogramData}
+        linePlotData={linePlotData}
+        correlationMatrixData={correlationMatrixData}
         feature1={feature1}
         feature2={feature2}
       />

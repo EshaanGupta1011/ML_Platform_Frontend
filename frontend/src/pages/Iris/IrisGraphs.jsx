@@ -1,5 +1,5 @@
-import React from "react";
-import { Scatter, Bar } from "react-chartjs-2";
+import React, { useRef } from "react";
+import { Scatter, Bar, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,53 +9,158 @@ import {
   Title,
   Tooltip,
   Legend,
+  LineElement,
 } from "chart.js";
 import {
   getScatterChartConfig,
   getHistogramChartConfig,
-} from "./chartConfig.js";
+  getLinePlotConfig,
+} from "../../ApiCalls/chartConfig.js";
+import { saveAs } from "file-saver";
 
 // Register required Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
+  LineElement,
   BarElement,
   Title,
   Tooltip,
   Legend
 );
 
-const IrisGraphs = ({ scatterData, histogramData, feature1, feature2 }) => {
-  console.log("Feature 1: ", feature1); // Log feature1 to check its value
-  console.log("Feature 2: ", feature2); // Log feature2 to check its value
-
-  // Ensure that scatterData contains the correct feature data
+const IrisGraphs = ({
+  scatterData,
+  histogramData,
+  linePlotData,
+  correlationMatrixData,
+  feature1,
+  feature2,
+}) => {
   const feature1Data = scatterData?.[feature1] || [];
   const feature2Data = scatterData?.[feature2] || [];
 
-  console.log("Feature 1 Data: ", feature1Data);
-  console.log("Feature 2 Data: ", feature2Data);
+  // Create refs for each chart type
+  const lineChartRef = useRef([]);
+  const scatterChartRef = useRef(null);
+  const histogramChartRef = useRef(null);
+
+  // Function to download the chart as PNG
+  const saveCanvas = (chartRef, filename) => {
+    if (chartRef && chartRef.current) {
+      const chart = chartRef.current;
+      if (chart?.canvas) {
+        const canvas = chart.canvas; // Access the canvas element directly
+        canvas.toBlob((blob) => {
+          saveAs(blob, filename); // Save the canvas as PNG using file-saver
+        });
+      } else {
+        console.error("Canvas not found.");
+      }
+    } else {
+      console.error("Chart reference not available.");
+    }
+  };
 
   return (
     <div className="graphs-container">
+      {/* Scatter Plot */}
       {scatterData && feature1Data.length && feature2Data.length && (
-        <div>
+        <div className="scatter-plot">
           <h3>Scatter Plot</h3>
           <Scatter
             data={getScatterChartConfig({
               feature1: feature1Data,
               feature2: feature2Data,
             })}
+            ref={scatterChartRef}
           />
+          <button
+            className="download-button"
+            onClick={() => saveCanvas(scatterChartRef, "scatter-plot.png")}
+          >
+            Download Scatter Plot as PNG
+          </button>
         </div>
       )}
+
+      {/* Histogram */}
       {histogramData && (
-        <div>
+        <div className="histogram-plot">
           <h3>Histogram</h3>
-          <Bar data={getHistogramChartConfig(histogramData)} />
+          <Bar
+            data={getHistogramChartConfig(histogramData)}
+            ref={histogramChartRef}
+          />
+          <button
+            className="download-button"
+            onClick={() => saveCanvas(histogramChartRef, "histogram-plot.png")}
+          >
+            Download Histogram as PNG
+          </button>
         </div>
       )}
+
+      {/* Line Plots for Each Feature */}
+      {linePlotData && (
+        <div className="line-container">
+          {Object.keys(linePlotData).map((feature, index) => {
+            const featureData = linePlotData[feature];
+
+            // Safeguard to ensure valid data
+            if (!featureData || !Array.isArray(featureData)) {
+              console.warn(
+                `Feature data for ${feature} is invalid or missing.`
+              );
+              return null;
+            }
+
+            return (
+              <div key={index} className="lineplot-graph">
+                <h3>{feature} Line Plot</h3>
+                <Line
+                  ref={(el) => (lineChartRef.current[index] = el)}
+                  data={getLinePlotConfig({ [feature]: featureData })}
+                />
+                <button
+                  className="download-button"
+                  onClick={() =>
+                    saveCanvas(
+                      lineChartRef.current[index],
+                      `${feature}-line-plot.png`
+                    )
+                  }
+                >
+                  Download {feature} Line Plot as PNG
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Combined Line Plot */}
+      {linePlotData && typeof linePlotData === "object" && (
+        <div className="combined-line-container">
+          <h3>Combined Line Plot</h3>
+          <Line
+            ref={(el) => (lineChartRef.current = el)}
+            data={getLinePlotConfig(linePlotData)}
+          />
+          <button
+            className="download-button"
+            onClick={() =>
+              saveCanvas(lineChartRef.current, "combined-line-plot.png")
+            }
+          >
+            Download Combined Line Plot as PNG
+          </button>
+        </div>
+      )}
+
+      {/* Correlation Matrix */}
+      {correlationMatrixData && }
     </div>
   );
 };

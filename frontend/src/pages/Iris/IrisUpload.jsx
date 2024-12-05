@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { uploadCSVFile, extractFeatures } from "./fetchData.js";
+import { uploadCSVFile, extractFeatures } from "../../ApiCalls/fetchData.js";
 
 const IrisUpload = ({
   setCsvPath,
@@ -49,7 +49,7 @@ const IrisUpload = ({
   };
 
   return (
-    <div className="row">
+    <div className="section-upload">
       <div className="step-text">
         <p>
           <b>Step 1:</b> Select a data .csv file
