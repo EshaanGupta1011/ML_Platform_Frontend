@@ -42,16 +42,16 @@ const IrisGraphs = ({
   const feature2Data = scatterData?.[feature2] || [];
 
   // Create refs for each chart type
-  const lineChartRef = useRef([]);
   const scatterChartRef = useRef(null);
   const histogramChartRef = useRef(null);
+  const lineChartRefs = useRef({}); // Use an object for dynamic refs
+  const combinedLineChartRef = useRef(null);
 
   // Function to download the chart as PNG
   const saveCanvas = (chartRef, filename) => {
-    if (chartRef && chartRef.current) {
-      const chart = chartRef.current;
-      if (chart?.canvas) {
-        const canvas = chart.canvas; // Access the canvas element directly
+    if (chartRef?.current) {
+      const canvas = chartRef.current.canvas; // Access the canvas element directly
+      if (canvas) {
         canvas.toBlob((blob) => {
           saveAs(blob, filename); // Save the canvas as PNG using file-saver
         });
@@ -120,14 +120,16 @@ const IrisGraphs = ({
               <div key={index} className="lineplot-graph">
                 <h3>{feature} Line Plot</h3>
                 <Line
-                  ref={(el) => (lineChartRef.current[index] = el)}
+                  ref={(el) => {
+                    lineChartRefs.current[feature] = el;
+                  }}
                   data={getLinePlotConfig({ [feature]: featureData })}
                 />
                 <button
                   className="download-button"
                   onClick={() =>
                     saveCanvas(
-                      lineChartRef.current[index],
+                      lineChartRefs.current[feature],
                       `${feature}-line-plot.png`
                     )
                   }
@@ -145,22 +147,19 @@ const IrisGraphs = ({
         <div className="combined-line-container">
           <h3>Combined Line Plot</h3>
           <Line
-            ref={(el) => (lineChartRef.current = el)}
+            ref={combinedLineChartRef}
             data={getLinePlotConfig(linePlotData)}
           />
           <button
             className="download-button"
             onClick={() =>
-              saveCanvas(lineChartRef.current, "combined-line-plot.png")
+              saveCanvas(combinedLineChartRef, "combined-line-plot.png")
             }
           >
             Download Combined Line Plot as PNG
           </button>
         </div>
       )}
-
-      {/* Correlation Matrix */}
-      {correlationMatrixData && }
     </div>
   );
 };
