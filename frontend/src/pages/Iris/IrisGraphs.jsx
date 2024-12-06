@@ -34,18 +34,17 @@ const IrisGraphs = ({
   scatterData,
   histogramData,
   linePlotData,
-  correlationMatrixData,
   feature1,
   feature2,
 }) => {
   const feature1Data = scatterData?.[feature1] || [];
   const feature2Data = scatterData?.[feature2] || [];
 
-  // Create refs for each chart type
+  // Refs for charts
   const scatterChartRef = useRef(null);
   const histogramChartRef = useRef(null);
-  const lineChartRefs = useRef({}); // Use an object for dynamic refs
   const combinedLineChartRef = useRef(null);
+  const lineChartRefs = useRef({}); // Object to hold refs for individual line charts
 
   // Function to download the chart as PNG
   const saveCanvas = (chartRef, filename) => {
@@ -116,13 +115,16 @@ const IrisGraphs = ({
               return null;
             }
 
+            // Initialize a ref for this specific line chart
+            if (!lineChartRefs.current[feature]) {
+              lineChartRefs.current[feature] = React.createRef();
+            }
+
             return (
               <div key={index} className="lineplot-graph">
                 <h3>{feature} Line Plot</h3>
                 <Line
-                  ref={(el) => {
-                    lineChartRefs.current[feature] = el;
-                  }}
+                  ref={lineChartRefs.current[feature]}
                   data={getLinePlotConfig({ [feature]: featureData })}
                 />
                 <button
