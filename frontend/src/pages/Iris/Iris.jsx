@@ -16,6 +16,7 @@ const Iris = () => {
   const [histogramData, setHistogramData] = useState(null);
   const [linePlotData, setLinePlotData] = useState(null);
   const [correlationMatrixData, setCorrelationMatrixData] = useState(null);
+  const [boxPlotData, setBoxPlotData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   // Automatically set feature1 and feature2 when features are populated
@@ -60,6 +61,7 @@ const Iris = () => {
           setHistogramData={setHistogramData}
           setLinePlotData={setLinePlotData}
           setCorrelationMatrixData={setCorrelationMatrixData}
+          setBoxPlotData={setBoxPlotData}
           csvPath={csvPath}
           setLoading={setLoading}
         />
@@ -71,6 +73,7 @@ const Iris = () => {
         histogramData={histogramData}
         linePlotData={linePlotData}
         correlationMatrixData={correlationMatrixData}
+        boxPlotData={boxPlotData}
         feature1={feature1}
         feature2={feature2}
       />

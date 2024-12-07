@@ -4,6 +4,7 @@ import {
   fetchHistogramData,
   fetchLinePlotData,
   fetchCorrelationMatrixData,
+  fetchBoxPlotData,
 } from "../../ApiCalls/fetchData.js";
 import { toast } from "react-toastify";
 
@@ -17,6 +18,7 @@ const IrisFeatureSelection = ({
   setHistogramData,
   setLinePlotData,
   setCorrelationMatrixData,
+  setBoxPlotData,
   csvPath,
   setLoading,
 }) => {
@@ -38,6 +40,12 @@ const IrisFeatureSelection = ({
       const scatterData = await fetchScatterData(csvPath, feature1, feature2);
       if (scatterData) {
         setScatterData(scatterData);
+      }
+
+      const boxPlotData = await fetchBoxPlotData(csvPath, feature1);
+      if (boxPlotData) {
+        setBoxPlotData(boxPlotData);
+        console.log(boxPlotData);
       }
 
       const histogramData = await fetchHistogramData(csvPath);

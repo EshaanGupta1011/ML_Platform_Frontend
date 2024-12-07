@@ -49,9 +49,12 @@ export const getLinePlotConfig = (data) => {
     return {
       label: feature, // Feature name as the label
       data: values, // Y-axis values (feature values)
-      borderColor: `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
-        Math.random() * 255
-      )}, ${Math.floor(Math.random() * 255)})`, // Random color for each line
+      borderColor: `rgb(
+        ${Math.floor(Math.random() * 128 + 128)}, 
+        ${Math.floor(Math.random() * 128 + 128)}, 
+        ${Math.floor(Math.random() * 128 + 128)}
+      )`, // Bright random color for each line
+
       borderWidth: 1,
       fill: false, // Don't fill the area under the line
     };

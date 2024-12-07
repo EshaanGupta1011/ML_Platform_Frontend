@@ -62,3 +62,11 @@ export const fetchCorrelationMatrixData = async (csvPath) => {
   if (!response.ok) throw new Error("Failed to fetch correlation data");
   return await response.json();
 };
+
+export const fetchBoxPlotData = async (csvPath, feature1) => {
+  const response = await fetch(
+    `${BASE_URL}/data_science/box_plot?csv_file=${csvPath}&feature1=${feature1}`
+  );
+  if (!response.ok) throw new Error("Failed to fetch Box Plot Data");
+  return await response.json();
+};
