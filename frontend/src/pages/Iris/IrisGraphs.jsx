@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { Scatter, Bar, Line } from "react-chartjs-2";
 import CorrelationMatrix from "./CorrelationMatrix";
+import BoxPlot from "./BoxPlot";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -36,6 +37,8 @@ const IrisGraphs = ({
   histogramData,
   linePlotData,
   correlationMatrixData,
+  boxPlotData,
+  features,
   feature1,
   feature2,
 }) => {
@@ -165,10 +168,19 @@ const IrisGraphs = ({
         </div>
       )}
 
-      {/* Box Plot */}
+      {/* Correlation Matrix */}
       {correlationMatrixData && (
         <CorrelationMatrix data={correlationMatrixData} />
       )}
+
+      {/* Box Plot */}
+      {histogramData && (
+        <>
+          <BoxPlot data={histogramData} />
+        </>
+      )}
+
+      {/* <BoxPlot data={boxPlotData[feature1]} feature={feature1} /> */}
     </div>
   );
 };
