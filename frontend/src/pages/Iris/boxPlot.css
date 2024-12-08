@@ -1,0 +1,14 @@
+.box-plot-container {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(400px, 1fr)
+  ); /* Adjust the number of columns dynamically */
+  gap: 20px; /* Space between the plots */
+  padding: 20px;
+}
+
+.box-plot-container svg {
+  border: 1px solid #ccc; /* Optional: Adds a border around each plot */
+  border-radius: 8px; /* Optional: Adds rounded corners */
+}
